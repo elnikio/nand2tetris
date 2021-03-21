@@ -1,0 +1,12 @@
+/*
+1-bit AND gate.
+*/
+
+CHIP And {
+    	IN a, b;
+    	OUT out;
+
+    	PARTS:
+	Nand(a = a, b = b, out = nr);
+	Nand(a = nr, b = nr, out = out);
+}

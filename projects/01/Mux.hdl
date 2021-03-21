@@ -1,0 +1,30 @@
+/*
+1-bit MUX gate.
+*/
+
+CHIP Mux {
+    	IN a, b, sel;
+    	OUT out;
+
+    	PARTS:
+	Nand(a = a, b = sel, out = sa1);
+	Nand(a = b, b = sel, out = sb);
+	Nand(a = a, b = sa1, out = sa2);
+	Nand(a = sa2, b = sb, out = out);
+}
+
+/*
+
+ sel:
+
+ a b s o
+ 0 0 0 0
+ 0 0 1 0
+ 0 1 0 0
+ 0 1 1 1
+ 1 0 0 1
+ 1 0 1 0
+ 1 1 0 1
+ 1 1 1 1
+
+*/

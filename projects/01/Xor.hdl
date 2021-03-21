@@ -1,0 +1,15 @@
+/*
+1-bit XOR gate.
+*/
+
+CHIP Xor {
+    	IN a, b;
+    	OUT out;
+
+    	PARTS:
+	Not(in = a, out = nota);
+	And(a = nota, b = b, out = bna);
+	Not(in = b, out = notb);
+	Not(in = a, b = notb, out = anb);
+	Or(a = bna, b = anb, out = out);
+}

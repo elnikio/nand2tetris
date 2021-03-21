@@ -1,0 +1,19 @@
+/*
+1-bit OR gate.
+*/
+
+CHIP Or {
+    	IN a, b;
+    	OUT out;
+
+    	PARTS:
+	Nand(a = a, b = a, out = na);
+	Nand(a = b, b = b, out = nb);
+	Nand(a = na, b = nb, out = out);
+}
+
+/*
+
+Once you reduce any gate to a truth table, it becomes very easy to implement by chaining together elementary gates until you get the right mix of 0's and 1's.
+
+*/

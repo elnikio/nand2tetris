@@ -1,0 +1,40 @@
+/*
+1-bit demultiplexor:
+*/
+
+CHIP DMux {
+    	IN in, sel;
+    	OUT a, b;
+
+    	PARTS:
+
+	/* sel a: */
+	Nand(a = in, b = sel, out = sa1);
+	Nand(a = in, b = sa1, out = sa2);
+	Nand(a = sa2, b = sa2, out = a);
+	
+	/* sel b: */
+	Nand(a = in, b = sel, out = sb);
+	Nand(a = sb, b = sb, out = b);
+}
+
+
+/*
+
+ sel a:
+
+ i s a
+ 0 0 0
+ 0 1 0
+ 1 0 1
+ 1 1 0
+
+ sel b:
+
+ i s a
+ 0 0 0
+ 0 1 0
+ 1 0 0
+ 1 1 1
+
+*/
