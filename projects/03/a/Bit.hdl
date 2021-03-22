@@ -1,0 +1,12 @@
+/*
+1-bit register.
+*/
+
+CHIP Bit {
+    	IN in, load;
+    	OUT out;
+
+    	PARTS:
+	DFF(in = loadin, out = dffout, out = out);
+	Mux(a = dffout, b = in, sel = load, out = loadin);
+}

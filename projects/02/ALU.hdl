@@ -1,0 +1,54 @@
+/*
+16-bit ALU.
+*/
+
+CHIP ALU {
+    	IN  
+        x[16], y[16],
+        zx, /* x = 0 */
+        nx, /* x = -x */
+        zy, /* y = 0 */
+        ny, /* y = -y *//
+        f,  /* x & y or x + y */
+        no; /* out = -out */
+
+    	OUT 
+        out[16],
+        zr, /* out = 0 */
+        ng; /* out < 0 */
+
+    	PARTS:
+	/* zx */
+	Mux16(a = x, b = false, sel = zx, out = zxout);
+
+	/* nx */
+	Not16(in = zxout, out = nxout1);
+	Mux16(a = zxout, b = nxout1, sel = nx, out = nxout2);
+
+	/* zy */
+	Mux16(a = y, b = false, sel = zy, out = zyout);
+
+	/* ny */
+	Not16(in = zyout, out = nyout1);
+	Mux16(a = zyout, b = nyout1, sel = ny, out = nyout2);
+
+	/* x + y */
+	Add16(a = nxout2, b = nyout2, out = addout);
+
+	/* x & y */
+	And16(a = nxout2, b = nyout2, out = andout);
+
+	/* f */
+	Mux16(a = andout, b = addout, sel = f, out = fout);
+
+	/* no */
+	Not16(in = fout, out = noout1);
+	Mux16(a = fout, b = noout1, sel = no, out = noout2, out = out);
+
+	/* zr */
+	Or16Way(in = noout2, out = zrout);
+	Not(in = zrout, out = zr);
+
+	/* ng */
+	Sign16(in = noout2, out = ng);
+}
