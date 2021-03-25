@@ -1,0 +1,15 @@
+/*
+A 16-bit counter.
+*/
+
+CHIP PC {
+    	IN in[16],load,inc,reset;
+    	OUT out[16];
+
+    	PARTS:
+	Add16 (a = incin, b[1..15] = false, b[0] = true, out = incout);
+	Mux16 (a = incin, b = incout, sel = inc, out = loadin);
+	Mux16 (a = loadin, b = in, sel = load, out = resin);
+	Mux16 (a = resin, b = false, sel = reset, out = regin);
+	Register (in = regin, load = true, out = out, out = incin);
+}

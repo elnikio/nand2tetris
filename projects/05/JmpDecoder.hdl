@@ -1,0 +1,36 @@
+/*
+jump opcode decoder.
+*/
+
+CHIP JmpDecoder {
+
+	IN j1, j2, j3, ng, zr;
+	OUT jmp;
+
+	PARTS:
+	
+	/* ps = non-negative,
+	   nzr = non-zero */
+	Not(in = zr, out = nzr);
+	Not(in = ng, out = ps);
+	
+	/* j1 { out < 0 } */
+	And(a = j1, b = ng, out = nj1);
+	/*And(a = nj1, b = nzr, out = nj1x);*/
+
+	/* j2 { out = 0 } */
+	And(a = j2, b = zr, out = nj2);
+
+	/* j3 { out > 0 } */
+	And(a = j3, b = ps, out = nj3); /* nj3 = non-negative */
+	And(a = nj3, b = nzr, out = nj3x); /* nj3x = exclusively positive */
+
+	/* combine */
+	Or(a = nj1, b = nj3x, out = nj13);
+	Or(a = nj13, b = nj2, out = jmp);
+
+}
+
+/*
+Check the condition of each of the three bits separately.
+*/

@@ -1,0 +1,21 @@
+/*
+Hack computer CPU.
+*/
+
+CHIP CPU {
+
+    	IN inM[16], instruction[16], reset;           
+    	OUT outM[16], writeM, addressM[15], pc[15];
+
+    	PARTS:
+	/* elementary components: */
+    	Mux16 (a = instruction, b = ALU, sel = instruction[15], out = writeA);
+    	Mux16 (a = readA, b = inM, sel = instruction[12], out = AorM);
+
+	/* integrated components: */
+    	ALU (x = readD, y = AorM, zx = instruction[11], nx = instruction[10], zy = instruction[9], ny = instruction[8], f = instruction[7], no = instruction[6], out = ALU, zr = zr, ng = ng,out = outM);
+    	DRegister (in = ALU, load = loadD, out = readD);
+    	ARegister (in = writeA, load = loadA, out = readA, out[0..14] = addressM);
+    	PC (in = readA, load = jump, inc = step, reset = reset, out[0..14] = pc);
+    	Controller (instruction = instruction, loadA = loadA, loadD = loadD, step = step, jump = jump, writeM = writeM, zr = zr, ng = ng);
+}

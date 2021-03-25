@@ -1,0 +1,13 @@
+/*
+Hack computer.
+*/
+
+CHIP Computer {
+
+    	IN reset;
+
+    	PARTS:
+    	CPU (inM = loadM, instruction = instruction, reset = reset, outM = writeM, writeM = write, addressM = address, pc = PC);
+    	Memory (in = writeM, load = write, address = address, out = loadM);
+    	ROM32K (address = PC, out = instruction);
+}

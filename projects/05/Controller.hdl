@@ -1,0 +1,39 @@
+/*
+Hack instruction decoder.
+*/
+
+CHIP Controller {
+	
+IN	instruction[16],
+	zr,
+	ng;
+
+OUT	loadA,
+	loadD,
+	step,
+	jump,
+	writeM;
+
+PARTS:
+	/* I. bits 5 - 3: output target : */
+
+	/* enable write to A if instruction = A or instruction = D && ALU must write to A : */
+	And (a = instruction[15], b = instruction[5], out = ALUtoA);
+	Not (in = instruction[15], out = instructionA);
+	Or (a = instructionA, b = ALUtoA, out = loadA);
+
+	/* enable write to D if instruction = C and ALU must write to D : */
+	And (a = instruction[15], b = instruction[4], out = loadD);
+
+	/* enable write to M if instruction = C and ALU must write to M : */
+	And (a = instruction[15], b = instruction[3], out = writeM);
+
+	/* II. bits 2 - 0: jump code */
+
+	/* jump decoder enables jump if jump condition is satisfied */
+	JmpDecoder (j1 = instruction[2], j2 = instruction[1], j3 = instruction[0], ng = ng, zr = zr, jmp = jmp);
+	And (a = instruction[15], b = jmp, out = xjmp, out = jump);
+
+	/* if jump == false, enable step instead */
+	Not (in = xjmp, out = step);
+}
